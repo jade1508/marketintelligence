@@ -1,16 +1,16 @@
-# 📊 Executive Market Intelligence Dashboard — Power BI
+# 📊 Executive Market Intelligence Dashboard - Power BI
 
-> A star-schema Power BI dashboard tracking competitor pricing, risk exposure, and stock signals — designed with AI-assisted architecture, built and validated by hand.
+> A star-schema Power BI dashboard tracking competitor pricing, risk exposure, and stock signals - designed with AI-assisted architecture, built and validated by hand.
 
-This is the third build in a small competitor-intelligence series (following an automated scraping pipeline and a Looker Studio dashboard). This version focuses on executive-level reporting: a proper star schema, risk-tiered SKU flagging, and an AI-generated narrative summary layer — while being explicit about where AI assistance actually started and stopped.
+This is the third build in a small competitor-intelligence series (following an automated scraping pipeline and a Looker Studio dashboard). This version focuses on executive-level reporting: a proper star schema, risk-tiered SKU flagging, and an AI-generated narrative summary layer - while being explicit about where AI assistance actually started and stopped.
 
 ## 🧭 A note on "AI-built"
 
-The full data model, DAX measures, and Deneb/Vega-Lite chart spec in this project were designed through conversations with **Claude and Gemini** — not Power BI's in-app Copilot, which requires a paid Microsoft Fabric capacity (F2+, ~€260/month) and wasn't part of this build. Formulas and structure were suggested in chat, then implemented, tested, and debugged manually in free Power BI Desktop.
+The full data model, DAX measures, and Deneb/Vega-Lite chart spec in this project were designed through conversations with **Claude and Gemini** - not Power BI's in-app Copilot, which requires a paid Microsoft Fabric capacity (F2+, ~€260/month) and wasn't part of this build. Formulas and structure were suggested in chat, then implemented, tested, and debugged manually in free Power BI Desktop.
 
-This distinction matters beyond licensing: AI-suggested DAX and thresholds still needed human validation against the actual data before being trusted — see [Where a human was still required](#-where-a-human-was-still-required) below.
+This distinction matters beyond licensing: AI-suggested DAX and thresholds still needed human validation against the actual data before being trusted - see [Where a human was still required](#-where-a-human-was-still-required) below.
 
-## 📐 Data model — Star Schema
+## 📐 Data model - Star Schema
 
 ```
 Dim_Calendar (1) ──┐
@@ -19,8 +19,8 @@ Dim_Product  (1) ──┘
 ```
 
 - `Dim_Calendar` and `Dim_Product` are dimension tables filtering the fact table.
-- `price_compare_log` is the single fact table driving all measures — fact-to-fact relationships were deliberately avoided to prevent ambiguous/broken filter paths, a common star-schema pitfall.
-- `market_intelligence_log` (raw daily scrape log) is merged into the model via Power Query rather than a live relationship, using a composite key of `product` + `optical_condition` + `date`. All three fields are required — `product` + `date` alone isn't unique, since a single product has multiple rows per day (one per condition tier), which would cause an incorrect many-to-one match:
+- `price_compare_log` is the single fact table driving all measures - fact-to-fact relationships were deliberately avoided to prevent ambiguous/broken filter paths, a common star-schema pitfall.
+- `market_intelligence_log` (raw daily scrape log) is merged into the model via Power Query rather than a live relationship, using a composite key of `product` + `optical_condition` + `date`. All three fields are required - `product` + `date` alone isn't unique, since a single product has multiple rows per day (one per condition tier), which would cause an incorrect many-to-one match:
 
 ```powerquery
 let
@@ -77,7 +77,7 @@ CALCULATE(
 )
 ```
 
-**Smart Narrative** — a DAX measure that auto-generates an executive summary string (with dynamic status icons) from the current filter context. Full implementation in this repo's `dax_measures.dax`.
+**Smart Narrative** - a DAX measure that auto-generates an executive summary string (with dynamic status icons) from the current filter context. Full implementation in this repo's `dax_measures.dax`.
 
 > Full measure list (SKU status icons, OOS rate, max-drop SKU, etc.) is documented in the accompanying `.dax` file in this repo.
 
@@ -106,27 +106,27 @@ CALCULATE(
 - **Header**: title, data freshness note, last-scraped-date card
 - **Left panel**: slicers (date, product group, condition, stock status) + AI-generated Smart Narrative box
 - **KPI row**: Price Gap %, SKUs at Risk, Price Alerts, Competitor OOS Rate
-- **Main chart**: Deneb/Vega-Lite custom visual — 3-day moving average trendline with a ±2 standard-deviation confidence band
+- **Main chart**: Deneb/Vega-Lite custom visual - 3-day moving average trendline with a ±2 standard-deviation confidence band
 - **Ranked table**: largest price moves, with data bars and colour-coded risk-status icons
 
 ## 🎨 Custom visual (Deneb / Vega-Lite)
 
-The trend chart is a custom Deneb spec layering a shaded confidence band (`Expected Lower/Upper Band`) under the moving-average price line — full JSON spec in `deneb_price_trend.json` in this repo.
+The trend chart is a custom Deneb spec layering a shaded confidence band (`Expected Lower/Upper Band`) under the moving-average price line - full JSON spec in `deneb_price_trend.json` in this repo.
 
 ## 💡 Key insight
 
-The dashboard's own AI-generated narrative reported average pricing as **"aligned with market pricing (+4.1%)"** — a reassuring, technically accurate headline. Sitting directly beneath it: **8 SKUs individually breaching the ±10% risk threshold**, invisible in the averaged number. This is a textbook case of an aggregate metric smoothing over real, actionable outliers — exactly the kind of gap a dashboard's narrative text can't be trusted to catch on its own, and exactly what a human reviewing the underlying table is still needed for.
+The dashboard's own AI-generated narrative reported average pricing as **"aligned with market pricing (+4.1%)"** - a reassuring, technically accurate headline. Sitting directly beneath it: **8 SKUs individually breaching the ±10% risk threshold**, invisible in the averaged number. This is a textbook case of an aggregate metric smoothing over real, actionable outliers - exactly the kind of gap a dashboard's narrative text can't be trusted to catch on its own, and exactly what a human reviewing the underlying table is still needed for.
 
 ## 🧠 Where a human was still required
 
-AI produced strong first drafts of the schema, measures, and narrative logic — but several decisions and fixes still required manual judgment:
+AI produced strong first drafts of the schema, measures, and narrative logic - but several decisions and fixes still required manual judgment:
 
 - **Threshold calibration**: the ±10% "risk" and ±15% "underpriced" bands are business judgment calls specific to this margin structure, not something derivable from the data alone.
-- **Reading past the headline metric**: as above — the AI narrative's "aligned" summary needed a human to notice the SKU-level risk count told a different story.
+- **Reading past the headline metric**: as above - the AI narrative's "aligned" summary needed a human to notice the SKU-level risk count told a different story.
 - **Star-schema correctness**: validating that dimension-to-fact relationships didn't create ambiguous filter paths required manually testing slicer behavior, not just accepting the suggested model.
-- **Window sizing**: using a 3-day (not 7-day) moving average was a deliberate adjustment for the current ~7–8 day tracking history — a decision based on data volume, not something the AI defaulted to correctly without being told the constraint.
-- **Data quality**: as with the earlier project in this series, AI-suggested formulas were tested against real data and iterated on where the first version didn't hold up (mismatched types, filter context issues) — the working version here is the result of that back-and-forth, not a first draft used as-is.
-- **Join key correctness**: an early version of the Power Query merge used only `product` + `date` as the composite key. That's not actually unique in this dataset — each product has one row per condition tier per day — so it silently produced incorrect many-to-one matches until caught and fixed by adding `optical_condition` to the key.
+- **Window sizing**: using a 3-day (not 7-day) moving average was a deliberate adjustment for the current ~7–8 day tracking history - a decision based on data volume, not something the AI defaulted to correctly without being told the constraint.
+- **Data quality**: as with the earlier project in this series, AI-suggested formulas were tested against real data and iterated on where the first version didn't hold up (mismatched types, filter context issues) - the working version here is the result of that back-and-forth, not a first draft used as-is.
+- **Join key correctness**: an early version of the Power Query merge used only `product` + `date` as the composite key. That's not actually unique in this dataset - each product has one row per condition tier per day - so it silently produced incorrect many-to-one matches until caught and fixed by adding `optical_condition` to the key.
 
 ## 🚀 Setup
 
