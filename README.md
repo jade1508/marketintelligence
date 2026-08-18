@@ -83,25 +83,7 @@ CALCULATE(
 
 ## 📈 Layout
 
-┌─────────────────────────────────────────────────────────────────────────────────┐
-│ [LEFT PANEL - SLICERS]        │ [HEADER BANNER] Executive Market Intelligence   │
-│ 🔘 Product Name               ├─────────────────────────────────────────────────┤
-│ 🔘 Optical Condition          │ [KPI CARDS]                                     │
-│ 🔘 Date Range (3/8 - 10/8)    │ ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌────────┐│
-│                               │ │GAP %     │ │SKU RISK  │ │ALERTS    │ │OOS RATE││
-│ 💡 DATA NOTE:                 │ │ +3.1%    │ │ 3 SKUs   │ │ 42 Alerts│ │ 18.5%  ││
-│ "Window: 3-day MA due to 8-day│ └──────────┘ └──────────┘ └──────────┘ └────────┘│
-│ tracking history."            ├─────────────────────────────────────────────────┤
-│                               │ [TIME SERIES - PRICE TREND & EXPECTED RANGE]    │
-│                               │ Visual: Line & Clustered Column Chart           │
-│                               │  - Line 1: Our Price MA3                        │
-│                               │  - Line 2: Comp Price MA3                       │
-│                               │  - Error Bands: Expected Upper/Lower Bounds     │
-├───────────────────────────────┼─────────────────────────────────────────────────┤
-│ [EXECUTIVE FOOTER]            │ [RANKED TABLE - LARGEST PRICE MOVES]            │
-│ Smart Narrative: AI-generated │ Columns: Product | Condition | Our | Comp | Gap │
-│ summary of key price shifts.  │ Visual Features: Data Bars on Gap %, Status Icon│
-└───────────────────────────────┴─────────────────────────────────────────────────┘
+<img width="657" height="361" alt="image" src="https://github.com/user-attachments/assets/a87f21ff-c7aa-4956-955b-b012ff8bd7b9" />
 
 - **Header**: title, data freshness note, last-scraped-date card
 - **Left panel**: slicers (date, product group, condition, stock status) + AI-generated Smart Narrative box
