@@ -6,7 +6,7 @@ This is the third build in a small competitor-intelligence series (following an 
 
 ## 🧭 A note on "AI-built"
 
-The full data model, DAX measures, and Deneb/Vega-Lite chart spec in this project were designed through conversations with **Claude and Gemini** - not Power BI's in-app Copilot, which requires a paid Microsoft Fabric capacity (F2+, ~€260/month) and wasn't part of this build. Formulas and structure were suggested in chat, then implemented, tested, and debugged manually in free Power BI Desktop.
+The full data model, DAX measures, and Deneb/Vega-Lite chart spec in this project were designed through conversations with **Claude and Gemini** - not Power BI's in-app Copilot and wasn't part of this build. Formulas and structure were suggested in chat, then implemented, tested, and debugged manually in free Power BI Desktop.
 
 This distinction matters beyond licensing: AI-suggested DAX and thresholds still needed human validation against the actual data before being trusted - see [Where a human was still required](#-where-a-human-was-still-required) below.
 
