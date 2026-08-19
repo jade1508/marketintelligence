@@ -88,7 +88,7 @@ CALCULATE(
 
 ## 📈 Layout
 
-<img width="1439" height="803" alt="MarketIntelligence" src="https://github.com/user-attachments/assets/6fcff4da-3f6c-4775-91a8-db71b3e1adfd" />
+<img width="1437" height="803" alt="MarketIntelligence" src="https://github.com/user-attachments/assets/aa6d02fc-22eb-4826-86fb-a15b07e066c0" />
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────────┐
